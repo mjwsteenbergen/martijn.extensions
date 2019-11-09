@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Martijn.Extensions.AsyncLinq
+namespace Martijn.Extensions.Linq
 {
-    internal static class Extensions
+    public static class LinqExtensions
     {
         public static string CombineWithNewLine(this IEnumerable<string> IEnumerable)
         {
