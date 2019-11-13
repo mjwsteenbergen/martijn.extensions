@@ -31,7 +31,7 @@ namespace Martijn.Extensions.Linq
                 }
             }
 
-            if (count > 2)
+            if (count >= 2)
             {
                 return IEnumerable.Aggregate(func);
             }
