@@ -59,6 +59,34 @@ namespace Martijn.Extensions.Memory
             }
         }
 
+        public async Task<T> ReadOrCalculate<T>(string filename, Func<T> func) 
+        {
+            try
+            {
+                return await Read<T>(filename);
+            }
+            catch (FileNotFoundException)
+            {
+                T calculatedValue = func();
+                await Write(filename, calculatedValue);
+                return calculatedValue;
+            }
+        }
+
+        public async Task<T> ReadOrCalculate<T>(string filename, Func<Task<T>> func)
+        {
+            try
+            {
+                return await Read<T>(filename);
+            }
+            catch (FileNotFoundException)
+            {
+                T calculatedValue = await func();
+                await Write(filename, calculatedValue);
+                return calculatedValue;
+            }
+        }
+
         public abstract Task<string> Read(string filename);
 
         public Task Write(string filename, object obj)
@@ -72,6 +100,7 @@ namespace Martijn.Extensions.Memory
                 WriteIndented = WriteIndented ?? true
             }));
         }
+
 
         public abstract Task WriteString(string filePath, string text);
     }

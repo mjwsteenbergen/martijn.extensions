@@ -116,6 +116,37 @@ namespace ExtensionsTest
             });
         }
 
+
+        [Test]
+        public async Task TestReadOrCalculate()
+        {
+            await mem.ReadOrCalculate("TestReadOrCalculate.json", () => {
+                return new Simple {
+                    MyString = "hello"
+                };
+            });
+
+            Simple s = await mem.Read<Simple>("TestReadOrCalculate.json");
+            Assert.AreEqual(s.MyString, "hello");
+
+        }
+
+        [Test]
+        public async Task TestReadOrCalculateAsync()
+        {
+            await mem.ReadOrCalculate("TestReadOrCalculateAsync.json", () =>
+            {
+                return Task.FromResult(new Simple
+                {
+                    MyString = "hello"
+                });
+            });
+
+            Simple s = await mem.Read<Simple>("TestReadOrCalculateAsync.json");
+            Assert.AreEqual(s.MyString, "hello");
+
+        }
+
         [OneTimeTearDown]
         public void TearDown()
         {
