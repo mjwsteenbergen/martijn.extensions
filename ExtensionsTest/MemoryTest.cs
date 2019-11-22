@@ -6,13 +6,14 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiLibsTest
+namespace ExtensionsTest
 {
     class MemoryTest
     {
         Memory mem;
 
         public string dirpath => AppDomain.CurrentDomain.BaseDirectory + "MemoryTest" + Path.DirectorySeparatorChar;
+        public string dirpath_dir => AppDomain.CurrentDomain.BaseDirectory + "Memory2Test" + Path.DirectorySeparatorChar;
 
         [SetUp]
         public void Setup()
@@ -81,6 +82,38 @@ namespace ApiLibsTest
 
             Assert.AreEqual(s.MyProperty, 0);
             Assert.AreEqual(s.MyString, "string");
+        }
+
+        [Test]
+        public async Task TestReadNonExistingDir()
+        {
+            Memory temp = new Memory(dirpath_dir) {
+                CreateDirectoryIfNotExists = true,
+            };
+
+            Simple s = await temp.Read("TestReadNonExistingObjectWithDefault.json", new Simple
+            {
+                MyString = "string"
+            });
+
+            Assert.AreEqual(s.MyProperty, 0);
+            Assert.AreEqual(s.MyString, "string");
+            Directory.Delete(dirpath_dir, true);
+        }
+
+        [Test]
+        public async Task TestReadNonExistingDirCrash()
+        {
+            Assert.CatchAsync(typeof(DirectoryNotFoundException), async () => {
+                Memory temp = new Memory(dirpath_dir)
+                {
+                };
+
+                Simple s = await temp.Read("TestReadNonExistingObjectWithDefault.json", new Simple
+                {
+                    MyString = "string"
+                });
+            });
         }
 
         [OneTimeTearDown]

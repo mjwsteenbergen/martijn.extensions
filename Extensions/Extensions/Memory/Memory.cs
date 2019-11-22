@@ -31,10 +31,10 @@ namespace Martijn.Extensions.Memory
                 }
 
                 if(UseAssemblyLocation) {
+                    return Path.GetDirectoryName(Assembly.Location) + Path.DirectorySeparatorChar;
+                } else {
                     return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar +
                                                  GeneratedApplicationName + Path.DirectorySeparatorChar;
-                } else {
-                    return Path.GetDirectoryName(Assembly.Location) + Path.DirectorySeparatorChar;
                 }
             }
         }
