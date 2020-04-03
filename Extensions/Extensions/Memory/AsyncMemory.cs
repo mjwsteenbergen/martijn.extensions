@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using System.Text.Json;
 using System.IO;
 using System;
+using Newtonsoft.Json;
 
 namespace Martijn.Extensions.Memory
 {
@@ -24,7 +24,7 @@ namespace Martijn.Extensions.Memory
                 return (T)(object)text;
             }
 
-            return JsonSerializer.Deserialize<T>(text);
+            return JsonConvert.DeserializeObject<T>(text);
         }
 
         public async Task<T> Read<T>(string filename, T @default)
@@ -89,16 +89,14 @@ namespace Martijn.Extensions.Memory
 
         public abstract Task<string> Read(string filename);
 
-        public Task Write(string filename, object obj)
+        public Task Write(string filename, object? obj)
         {
-            if (obj is string)
+            if (obj is string stringContent)
             {
-                return WriteString(filename, obj as string);
+                return WriteString(filename, stringContent);
             }
 
-            return WriteString(filename, JsonSerializer.Serialize(obj, new JsonSerializerOptions {
-                WriteIndented = WriteIndented ?? true
-            }));
+            return WriteString(filename, JsonConvert.SerializeObject(obj, (WriteIndented ?? true) ? Formatting.Indented : Formatting.None));
         }
 
 
