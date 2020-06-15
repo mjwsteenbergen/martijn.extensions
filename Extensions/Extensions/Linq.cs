@@ -16,6 +16,11 @@ namespace Martijn.Extensions.Linq
             return IEnumerable.Combine((i, j) => i + " " + j);
         }
 
+        public static string Combine(this IEnumerable<string> IEnumerable, string between)
+        {
+            return IEnumerable.Combine((i, j) => i + between + j);
+        }
+
         public static T Combine<T>(this IEnumerable<T> IEnumerable, Func<T, T, T> func)
         {
             var count = 0;
