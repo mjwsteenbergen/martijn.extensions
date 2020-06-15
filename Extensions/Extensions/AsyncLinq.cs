@@ -13,9 +13,9 @@ namespace Martijn.Extensions.AsyncLinq
             return (await Task.WhenAll(enumerable));
         }
 
-        public async static Task WhenAll(this IEnumerable<Task> enumerable)
+        public static Task WhenAll(this IEnumerable<Task> enumerable)
         {
-            await Task.WhenAll(enumerable);
+            return (Task.WhenAll(enumerable));
         }
 
         public async static IAsyncEnumerable<T> ToIAsyncEnumberable<T>(this IEnumerable<Task<T>> enumerable)
