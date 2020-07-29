@@ -6,16 +6,6 @@ namespace Martijn.Extensions.Linq
 {
     public static class LinqExtensions
     {
-        public static string CombineWithNewLine(this IEnumerable<string> IEnumerable)
-        {
-            return IEnumerable.Combine((i, j) => i + "\n" + j);
-        }
-
-        public static string CombineWithSpace(this IEnumerable<string> IEnumerable)
-        {
-            return IEnumerable.Combine((i, j) => i + " " + j);
-        }
-
         public static string Combine(this IEnumerable<string> IEnumerable, string between)
         {
             return IEnumerable.Combine((i, j) => i + between + j);
