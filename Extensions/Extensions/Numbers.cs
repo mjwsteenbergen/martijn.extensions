@@ -89,7 +89,5 @@ namespace Martijn.Extensions.Numbers
                 last += steps;
             }
         }
-
-        
     }
 }
