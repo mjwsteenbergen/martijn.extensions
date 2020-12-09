@@ -61,6 +61,46 @@ namespace Martijn.Extensions.Linq
             return me.Where(i => !other.Contains(i));
         }
 
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable.Where(i => i != null);
+        }
+
+        public static IEnumerable<List<T>> Subset<T>(this IEnumerable<T> list, int amountOfItems)
+        {
+            List<List<T>> cache = new List<List<T>>();
+
+            foreach (var item in list)
+            {
+                cache = cache.Concat(cache.Select(i => i.Concat(new List<T> { item }).ToList())).Append(new List<T> { item }).ToList();
+                foreach (var res in cache.Where(i => i.Count == amountOfItems))
+                {
+                    yield return res;
+                }
+                cache = cache.Where(i => i.Count < amountOfItems).ToList();
+            }
+        }
+
+        public static IEnumerable<List<T>> Split<T>(this IEnumerable<T> list, int size)
+        {
+            if (size < 0) throw new ArgumentException(nameof(size) + " should be bigger than zero");
+            List<T> subset = new List<T>();
+            foreach (var item in list)
+            {
+                subset.Add(item);
+                if (subset.Count >= size)
+                {
+                    yield return subset;
+                    subset = new List<T>();
+                }
+            }
+
+            if (subset.Count > 0)
+            {
+                yield return subset;
+            }
+        }
+
         public static IEnumerable<T> Distinct<T>(this IEnumerable<T> IEnumerable)
         {
             return IEnumerable.Distinct((i,j) => i?.Equals(j) ?? j?.Equals(i) ?? true, (i) => i?.GetHashCode() ?? 0);
