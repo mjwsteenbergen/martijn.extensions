@@ -41,5 +41,53 @@ namespace Martijn.Extensions.AsyncLinq
                 yield return func(item);
             }
         }
+
+        public static async Task<List<T>> ToList<T>(this IAsyncEnumerable<T> enumerable)
+        {
+            List<T> res = new List<T>();
+            await foreach (var item in enumerable)
+            {
+                res.Add(item);
+            }
+            return res;
+        }
+
+        public static async Task<T> First<T>(this IAsyncEnumerable<T> enumerable, Func<T, bool> func)
+        {
+            await foreach (var item in enumerable)
+            {
+                if (func(item))
+                {
+                    return item;
+                }
+            }
+
+            throw new InvalidOperationException("Sequence contains no matching element");
+        }
+
+        public static Task<T> First<T>(this IAsyncEnumerable<T> enumerable) => enumerable.First(i => true);
+
+        public static async IAsyncEnumerable<Y> SelectMany<T, Y>(this IAsyncEnumerable<T> enumerable, Func<T, IEnumerable<Y>> func)
+        {
+            await foreach (var item in enumerable)
+            {
+                foreach (var actualItem in func(item))
+                {
+                    yield return actualItem;
+                }
+            }
+        }
+
+        public static async IAsyncEnumerable<T> TakeWhile<T>(this IAsyncEnumerable<T> enumerable, Func<T, bool> func)
+        {
+            await foreach (var item in enumerable)
+            {
+                if (!func(item))
+                {
+                    break;
+                }
+                yield return item;
+            }
+        }
     }
 }
